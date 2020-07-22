@@ -9,7 +9,6 @@ using DataBindingCodeBehindApp.Core.Contracts.Services;
 using DataBindingCodeBehindApp.Core.Services;
 using DataBindingCodeBehindApp.Models;
 using DataBindingCodeBehindApp.Services;
-using DataBindingCodeBehindApp.ViewModels;
 using DataBindingCodeBehindApp.Views;
 
 using Microsoft.Extensions.Configuration;
@@ -53,7 +52,7 @@ namespace DataBindingCodeBehindApp
 
         private void ConfigureServices(HostBuilderContext context, IServiceCollection services)
         {
-            // TODO WTS: Register your services, viewmodels and pages here
+            // TODO WTS: Register your services and pages here
 
             // App Host
             services.AddHostedService<ApplicationHostService>();
@@ -67,20 +66,12 @@ namespace DataBindingCodeBehindApp
             services.AddSingleton<IPersistAndRestoreService, PersistAndRestoreService>();
             services.AddSingleton<IThemeSelectorService, ThemeSelectorService>();
             services.AddSingleton<ISampleDataService, SampleDataService>();
-            services.AddSingleton<IPageService, PageService>();
             services.AddSingleton<INavigationService, NavigationService>();
 
-            // Views and ViewModels
-            services.AddTransient<IShellWindow, ShellWindow>();
-            services.AddTransient<ShellViewModel>();
-
-            services.AddTransient<MainViewModel>();
+            // Views
+            services.AddTransient<IShellWindow, ShellWindow>();            
             services.AddTransient<MainPage>();
-
-            services.AddTransient<MasterDetailViewModel>();
             services.AddTransient<MasterDetailPage>();
-
-            services.AddTransient<SettingsViewModel>();
             services.AddTransient<SettingsPage>();
 
             // Configuration

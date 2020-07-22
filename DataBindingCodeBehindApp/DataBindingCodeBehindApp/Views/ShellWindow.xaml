@@ -12,22 +12,17 @@
     mc:Ignorable="d"
     MinWidth="500"
     MinHeight="350"
+    Loaded="OnLoaded"
+    Unloaded="OnUnloaded"
     Title="{x:Static properties:Resources.AppDisplayName}">
-    <i:Interaction.Triggers>
-        <i:EventTrigger EventName="Loaded">
-            <i:InvokeCommandAction Command="{Binding LoadedCommand}" />
-        </i:EventTrigger>
-        <i:EventTrigger EventName="Unloaded">
-            <i:InvokeCommandAction Command="{Binding UnloadedCommand}" />
-        </i:EventTrigger>
-    </i:Interaction.Triggers>
     <controls:MetroWindow.LeftWindowCommands>
         <controls:WindowCommands>
             <Button
+                Click="OnGoBack"
+                IsEnabled="{Binding CanGoBack}"
                 Width="{Binding ElementName=hamburgerMenu, Path=CompactPaneLength}"
                 AutomationProperties.Name="{x:Static properties:Resources.ShellGoBackButton}"
-                ToolTip="{x:Static properties:Resources.ShellGoBackButton}"
-                Command="{Binding GoBackCommand}">
+                ToolTip="{x:Static properties:Resources.ShellGoBackButton}">
                 <TextBlock
                     Text="&#xE72B;"
                     FontSize="14"
@@ -100,8 +95,7 @@
             OptionsItemsSource="{Binding OptionMenuItems}"
             SelectedItem="{Binding SelectedMenuItem}"
             SelectedOptionsItem="{Binding SelectedOptionsMenuItem}"
-            ItemCommand="{Binding MenuItemInvokedCommand}"
-            OptionsItemCommand="{Binding OptionsMenuItemInvokedCommand}"
+            ItemInvoked="OnItemInvoked"
             ItemTemplateSelector="{StaticResource MenuItemTemplateSelector}"
             OptionsItemTemplateSelector="{StaticResource MenuItemTemplateSelector}">
             <controls:HamburgerMenu.Content>

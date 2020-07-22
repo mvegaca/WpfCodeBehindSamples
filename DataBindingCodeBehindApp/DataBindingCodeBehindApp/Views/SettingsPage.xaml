@@ -8,7 +8,6 @@
     xmlns:converters="clr-namespace:DataBindingCodeBehindApp.Converters"
     xmlns:models="clr-namespace:DataBindingCodeBehindApp.Models"
     xmlns:properties="clr-namespace:DataBindingCodeBehindApp.Properties"
-    xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
     mc:Ignorable="d"
     d:DesignHeight="450" d:DesignWidth="800">
     <Page.Resources>
@@ -39,27 +38,19 @@
                     <StackPanel Margin="{StaticResource XSmallTopMargin}">
                         <RadioButton
                             GroupName="AppTheme"
+                            Tag="Light"
+                            Checked="OnSetTheme"
                             Content="{x:Static properties:Resources.SettingsPageRadioButtonLightTheme}"
                             FontSize="{StaticResource MediumFontSize}"
-                            IsChecked="{Binding Theme, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter=Light}">
-                            <i:Interaction.Triggers>
-                                <i:EventTrigger EventName="Checked">
-                                    <i:InvokeCommandAction Command="{Binding SetThemeCommand}" CommandParameter="Light" />
-                                </i:EventTrigger>
-                            </i:Interaction.Triggers>
-                        </RadioButton>
+                            IsChecked="{Binding Theme, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter=Light}" />
                         <RadioButton
                             GroupName="AppTheme"
+                            Tag="Dark"
+                            Checked="OnSetTheme"
                             Content="{x:Static properties:Resources.SettingsPageRadioButtonDarkTheme}"
                             Margin="{StaticResource XSmallTopMargin}"
                             FontSize="{StaticResource MediumFontSize}"
-                            IsChecked="{Binding Theme, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter=Dark}">
-                            <i:Interaction.Triggers>
-                                <i:EventTrigger EventName="Checked">
-                                    <i:InvokeCommandAction Command="{Binding SetThemeCommand}" CommandParameter="Dark" />
-                                </i:EventTrigger>
-                            </i:Interaction.Triggers>
-                        </RadioButton>
+                            IsChecked="{Binding Theme, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter=Dark}" />
                     </StackPanel>
                 </StackPanel>
 
@@ -80,7 +71,7 @@
                     Margin="{StaticResource SmallTopMargin}"
                     AutomationProperties.Name="{Binding Text, ElementName=settingsPrivacyStatement}">
                     <Hyperlink
-                        Command="{Binding PrivacyStatementCommand}"
+                        Click="OnPrivacyStatement"
                         AutomationProperties.Name="{Binding Text, ElementName=settingsPrivacyStatement}">
                         <TextBlock
                             x:Name="settingsPrivacyStatement"

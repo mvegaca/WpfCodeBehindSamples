@@ -1,4 +1,4 @@
-﻿namespace DataBindingCodeBehindApp.Contracts.ViewModels
+﻿namespace DataBindingCodeBehindApp.Contracts.Views
 {
     public interface INavigationAware
     {
