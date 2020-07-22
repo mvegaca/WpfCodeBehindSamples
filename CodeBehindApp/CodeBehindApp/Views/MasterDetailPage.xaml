@@ -123,16 +123,16 @@
                 Style="{StaticResource PageTitleStyle}"
                 Margin="{StaticResource MediumLeftMargin}"
                 Text="{x:Static properties:Resources.MasterDetailPageTitle}" />
-            <ListView
+            <ListView                
                 Grid.Row="1"
-                ItemsSource="{Binding SampleItems}"
-                ItemTemplate="{StaticResource ItemTemplate}"
-                SelectedItem="{Binding Selected, Mode=TwoWay}" />
+                x:Name="listView"
+                SelectionChanged="OnSelectionChanged"
+                ItemTemplate="{StaticResource ItemTemplate}" />
         </Grid>
         <ContentControl
             Grid.Column="1"
+            x:Name="detailControl"
             IsTabStop="False"
-            Content="{Binding Selected}"
             ContentTemplate="{StaticResource DetailTemplate}" />
     </Grid>
 </Page>

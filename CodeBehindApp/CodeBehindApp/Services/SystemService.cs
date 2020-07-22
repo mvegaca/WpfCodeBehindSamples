@@ -1,10 +1,8 @@
 ﻿using System.Diagnostics;
 
-using CodeBehindApp.Contracts.Services;
-
 namespace CodeBehindApp.Services
 {
-    public class SystemService : ISystemService
+    public class SystemService
     {
         public SystemService()
         {

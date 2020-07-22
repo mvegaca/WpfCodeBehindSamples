@@ -1,42 +1,36 @@
 ﻿using System;
 using System.Collections;
 using System.IO;
-
-using CodeBehindApp.Contracts.Services;
-using CodeBehindApp.Core.Contracts.Services;
-using CodeBehindApp.Models;
-
-using Microsoft.Extensions.Options;
+using CodeBehindApp.Core.Services;
 
 namespace CodeBehindApp.Services
 {
-    public class PersistAndRestoreService : IPersistAndRestoreService
+    public class PersistAndRestoreService
     {
-        private readonly IFileService _fileService;
-        private readonly AppConfig _appConfig;
+        private const string ConfigurationsFolder = "CodeBehindApp\\Configurations";
+        private const string AppPropertiesFileName = "AppProperties.json";
+
+        private readonly FileService _fileService;
         private readonly string _localAppData = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
 
-        public PersistAndRestoreService(IFileService fileService, IOptions<AppConfig> appConfig)
+        public PersistAndRestoreService()
         {
-            _fileService = fileService;
-            _appConfig = appConfig.Value;
+            _fileService = new FileService();
         }
 
         public void PersistData()
         {
             if (App.Current.Properties != null)
             {
-                var folderPath = Path.Combine(_localAppData, _appConfig.ConfigurationsFolder);
-                var fileName = _appConfig.AppPropertiesFileName;
-                _fileService.Save(folderPath, fileName, App.Current.Properties);
+                var folderPath = Path.Combine(_localAppData, ConfigurationsFolder);
+                _fileService.Save(folderPath, AppPropertiesFileName, App.Current.Properties);
             }
         }
 
         public void RestoreData()
         {
-            var folderPath = Path.Combine(_localAppData, _appConfig.ConfigurationsFolder);
-            var fileName = _appConfig.AppPropertiesFileName;
-            var properties = _fileService.Read<IDictionary>(folderPath, fileName);
+            var folderPath = Path.Combine(_localAppData, ConfigurationsFolder);
+            var properties = _fileService.Read<IDictionary>(folderPath, AppPropertiesFileName);
             if (properties != null)
             {
                 foreach (DictionaryEntry property in properties)

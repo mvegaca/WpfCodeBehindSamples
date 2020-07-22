@@ -1,13 +1,11 @@
 ﻿using System.IO;
 using System.Text;
 
-using CodeBehindApp.Core.Contracts.Services;
-
 using Newtonsoft.Json;
 
 namespace CodeBehindApp.Core.Services
 {
-    public class FileService : IFileService
+    public class FileService
     {
         public T Read<T>(string folderPath, string fileName)
         {

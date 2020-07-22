@@ -1,33 +1,21 @@
 ﻿using System;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
-
-using CodeBehindApp.Contracts.Services;
-using CodeBehindApp.Contracts.Views;
-using CodeBehindApp.ViewModels;
-
-using Microsoft.Extensions.Hosting;
+using CodeBehindApp.Views;
 
 namespace CodeBehindApp.Services
 {
-    public class ApplicationHostService : IHostedService
+    public class ApplicationHostService
     {
-        private readonly IServiceProvider _serviceProvider;
-        private readonly INavigationService _navigationService;
-        private readonly IPersistAndRestoreService _persistAndRestoreService;
-        private readonly IThemeSelectorService _themeSelectorService;
-        private IShellWindow _shellWindow;
+        private readonly PersistAndRestoreService _persistAndRestoreService;
+        private ShellWindow _shellWindow;
 
-        public ApplicationHostService(IServiceProvider serviceProvider, INavigationService navigationService, IThemeSelectorService themeSelectorService, IPersistAndRestoreService persistAndRestoreService)
+        public ApplicationHostService()
         {
-            _serviceProvider = serviceProvider;
-            _navigationService = navigationService;
-            _themeSelectorService = themeSelectorService;
-            _persistAndRestoreService = persistAndRestoreService;
+            _persistAndRestoreService = new PersistAndRestoreService();
         }
 
-        public async Task StartAsync(CancellationToken cancellationToken)
+        public async Task StartAsync()
         {
             // Initialize services that you need before app activation
             await InitializeAsync();
@@ -38,7 +26,7 @@ namespace CodeBehindApp.Services
             await StartupAsync();
         }
 
-        public async Task StopAsync(CancellationToken cancellationToken)
+        public async Task StopAsync()
         {
             _persistAndRestoreService.PersistData();
             await Task.CompletedTask;
@@ -47,7 +35,7 @@ namespace CodeBehindApp.Services
         private async Task InitializeAsync()
         {
             _persistAndRestoreService.RestoreData();
-            _themeSelectorService.SetTheme();
+            ThemeSelectorService.SetTheme();
             await Task.CompletedTask;
         }
 
@@ -58,13 +46,13 @@ namespace CodeBehindApp.Services
 
         private async Task HandleActivationAsync()
         {
-            if (App.Current.Windows.OfType<IShellWindow>().Count() == 0)
+            if (App.Current.Windows.OfType<ShellWindow>().Count() == 0)
             {
                 // Default activation that navigates to the apps default page
-                _shellWindow = _serviceProvider.GetService(typeof(IShellWindow)) as IShellWindow;
-                _navigationService.Initialize(_shellWindow.GetNavigationFrame());
+                _shellWindow = new ShellWindow();
+                NavigationService.Initialize(_shellWindow.GetNavigationFrame());
                 _shellWindow.ShowWindow();
-                _navigationService.NavigateTo(typeof(MainViewModel).FullName);
+                NavigationService.NavigateTo(typeof(MainPage));
                 await Task.CompletedTask;
             }
         }

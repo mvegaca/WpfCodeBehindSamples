@@ -2,15 +2,13 @@
 using System.Diagnostics;
 using System.Reflection;
 
-using CodeBehindApp.Contracts.Services;
-
 using OSVersionHelper;
 
 using Windows.ApplicationModel;
 
 namespace CodeBehindApp.Services
 {
-    public class ApplicationInfoService : IApplicationInfoService
+    public class ApplicationInfoService
     {
         public ApplicationInfoService()
         {

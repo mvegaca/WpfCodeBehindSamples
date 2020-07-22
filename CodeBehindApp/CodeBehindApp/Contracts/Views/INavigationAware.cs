@@ -1,4 +1,4 @@
-﻿namespace CodeBehindApp.Contracts.ViewModels
+﻿namespace CodeBehindApp.Contracts.Views
 {
     public interface INavigationAware
     {

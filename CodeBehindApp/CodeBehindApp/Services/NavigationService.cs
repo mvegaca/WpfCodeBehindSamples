@@ -1,28 +1,20 @@
 ﻿using System;
 using System.Windows.Controls;
 using System.Windows.Navigation;
-
-using CodeBehindApp.Contracts.Services;
-using CodeBehindApp.Contracts.ViewModels;
+using CodeBehindApp.Contracts.Views;
 
 namespace CodeBehindApp.Services
 {
-    public class NavigationService : INavigationService
+    public static class NavigationService
     {
-        private readonly IPageService _pageService;
-        private Frame _frame;
-        private object _lastParameterUsed;
+        private static Frame _frame;
+        private static object _lastParameterUsed;
 
-        public event EventHandler<string> Navigated;
+        public static event EventHandler<Type> Navigated;
 
-        public bool CanGoBack => _frame.CanGoBack;
+        public static bool CanGoBack => _frame.CanGoBack;
 
-        public NavigationService(IPageService pageService)
-        {
-            _pageService = pageService;
-        }
-
-        public void Initialize(Frame shellFrame)
+        public static void Initialize(Frame shellFrame)
         {
             if (_frame == null)
             {
@@ -31,29 +23,25 @@ namespace CodeBehindApp.Services
             }
         }
 
-        public void UnsubscribeNavigation()
+        public static void UnsubscribeNavigation()
         {
             _frame.Navigated -= OnNavigated;
             _frame = null;
         }
 
-        public void GoBack()
+        public static void GoBack()
             => _frame.GoBack();
 
-        public bool NavigateTo(string pageKey, object parameter = null, bool clearNavigation = false)
+        public static bool NavigateTo(Type pageType, object parameter = null, bool clearNavigation = false)
         {
-            var pageType = _pageService.GetPageType(pageKey);
-
             if (_frame.Content?.GetType() != pageType || (parameter != null && !parameter.Equals(_lastParameterUsed)))
             {
                 _frame.Tag = clearNavigation;
-                var page = _pageService.GetPage(pageKey);
-                var navigated = _frame.Navigate(page, parameter);
+                var navigated = _frame.Navigate(Activator.CreateInstance(pageType), parameter);
                 if (navigated)
                 {
                     _lastParameterUsed = parameter;
-                    var dataContext = _frame.GetDataContext();
-                    if (dataContext is INavigationAware navigationAware)
+                    if (_frame.Content is INavigationAware navigationAware)
                     {
                         navigationAware.OnNavigatedFrom();
                     }
@@ -65,10 +53,10 @@ namespace CodeBehindApp.Services
             return false;
         }
 
-        public void CleanNavigation()
+        public static void CleanNavigation()
             => _frame.CleanNavigation();
 
-        private void OnNavigated(object sender, NavigationEventArgs e)
+        private static void OnNavigated(object sender, NavigationEventArgs e)
         {
             if (sender is Frame frame)
             {
@@ -78,13 +66,12 @@ namespace CodeBehindApp.Services
                     frame.CleanNavigation();
                 }
 
-                var dataContext = frame.GetDataContext();
-                if (dataContext is INavigationAware navigationAware)
+                if (frame.Content is INavigationAware navigationAware)
                 {
                     navigationAware.OnNavigatedTo(e.ExtraData);
                 }
 
-                Navigated?.Invoke(sender, dataContext.GetType().FullName);
+                Navigated?.Invoke(sender, frame.Content.GetType());
             }
         }
     }

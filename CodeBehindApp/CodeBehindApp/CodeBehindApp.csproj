@@ -21,15 +21,9 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <None Update="appsettings.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
     <PackageReference Include="Microsoft.Windows.SDK.Contracts" Version="10.0.19041.1" />
     <PackageReference Include="OSVersionHelper" Version="1.0.64" />
     <PackageReference Include="MahApps.Metro" Version="2.1.0" />
-    <PackageReference Include="Microsoft.Extensions.Hosting" Version="3.1.5" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CodeBehindApp.Core\CodeBehindApp.Core.csproj">

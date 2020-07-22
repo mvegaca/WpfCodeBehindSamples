@@ -38,28 +38,20 @@
                         Text="{x:Static properties:Resources.SettingsPageChooseThemeText}" />
                     <StackPanel Margin="{StaticResource XSmallTopMargin}">
                         <RadioButton
+                            x:Name="lightThemeRadioButton"
                             GroupName="AppTheme"
                             Content="{x:Static properties:Resources.SettingsPageRadioButtonLightTheme}"
                             FontSize="{StaticResource MediumFontSize}"
-                            IsChecked="{Binding Theme, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter=Light}">
-                            <i:Interaction.Triggers>
-                                <i:EventTrigger EventName="Checked">
-                                    <i:InvokeCommandAction Command="{Binding SetThemeCommand}" CommandParameter="Light" />
-                                </i:EventTrigger>
-                            </i:Interaction.Triggers>
-                        </RadioButton>
+                            Tag="Light"
+                            Checked="OnChecked" />
                         <RadioButton
+                            x:Name="darkThemeRadioButton"
                             GroupName="AppTheme"
                             Content="{x:Static properties:Resources.SettingsPageRadioButtonDarkTheme}"
                             Margin="{StaticResource XSmallTopMargin}"
                             FontSize="{StaticResource MediumFontSize}"
-                            IsChecked="{Binding Theme, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter=Dark}">
-                            <i:Interaction.Triggers>
-                                <i:EventTrigger EventName="Checked">
-                                    <i:InvokeCommandAction Command="{Binding SetThemeCommand}" CommandParameter="Dark" />
-                                </i:EventTrigger>
-                            </i:Interaction.Triggers>
-                        </RadioButton>
+                            Tag="Dark"
+                            Checked="OnChecked" />
                     </StackPanel>
                 </StackPanel>
 
@@ -68,7 +60,7 @@
                     Style="{StaticResource SubtitleTextStyle}"
                     Text="{x:Static properties:Resources.SettingsPageAboutTitle}" />
                 <TextBlock
-                    Text="{Binding VersionDescription, Mode=OneWay}"
+                    x:Name="versionDescriptionText"
                     Margin="{StaticResource XSmallTopMargin}"
                     Style="{StaticResource BodyTextStyle}" />
                 <TextBlock
@@ -80,7 +72,7 @@
                     Margin="{StaticResource SmallTopMargin}"
                     AutomationProperties.Name="{Binding Text, ElementName=settingsPrivacyStatement}">
                     <Hyperlink
-                        Command="{Binding PrivacyStatementCommand}"
+                        Click="OnPrivacyStatementClick"
                         AutomationProperties.Name="{Binding Text, ElementName=settingsPrivacyStatement}">
                         <TextBlock
                             x:Name="settingsPrivacyStatement"

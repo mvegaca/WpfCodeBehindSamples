@@ -1,20 +1,6 @@
-﻿using System.IO;
-using System.Reflection;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Threading;
-
-using CodeBehindApp.Contracts.Services;
-using CodeBehindApp.Contracts.Views;
-using CodeBehindApp.Core.Contracts.Services;
-using CodeBehindApp.Core.Services;
-using CodeBehindApp.Models;
 using CodeBehindApp.Services;
-using CodeBehindApp.ViewModels;
-using CodeBehindApp.Views;
-
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 
 namespace CodeBehindApp
 {
@@ -25,73 +11,21 @@ namespace CodeBehindApp
     // Tracking issue for improving this is https://github.com/dotnet/wpf/issues/1946
     public partial class App : Application
     {
-        private IHost _host;
-
-        public T GetService<T>()
-            where T : class
-            => _host.Services.GetService(typeof(T)) as T;
+        private readonly ApplicationHostService _applicationHostService;
 
         public App()
         {
+            _applicationHostService = new ApplicationHostService();
         }
 
         private async void OnStartup(object sender, StartupEventArgs e)
         {
-            var appLocation = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
-
-            // For more information about .NET generic host see  https://docs.microsoft.com/aspnet/core/fundamentals/host/generic-host?view=aspnetcore-3.0
-            _host = Host.CreateDefaultBuilder(e.Args)
-                    .ConfigureAppConfiguration(c =>
-                    {
-                        c.SetBasePath(appLocation);
-                    })
-                    .ConfigureServices(ConfigureServices)
-                    .Build();
-
-            await _host.StartAsync();
-        }
-
-        private void ConfigureServices(HostBuilderContext context, IServiceCollection services)
-        {
-            // TODO WTS: Register your services, viewmodels and pages here
-
-            // App Host
-            services.AddHostedService<ApplicationHostService>();
-
-            // Core Services
-            services.AddSingleton<IFileService, FileService>();
-
-            // Services
-            services.AddSingleton<IApplicationInfoService, ApplicationInfoService>();
-            services.AddSingleton<ISystemService, SystemService>();
-            services.AddSingleton<IPersistAndRestoreService, PersistAndRestoreService>();
-            services.AddSingleton<IThemeSelectorService, ThemeSelectorService>();
-            services.AddSingleton<ISampleDataService, SampleDataService>();
-            services.AddSingleton<IPageService, PageService>();
-            services.AddSingleton<INavigationService, NavigationService>();
-
-            // Views and ViewModels
-            services.AddTransient<IShellWindow, ShellWindow>();
-            services.AddTransient<ShellViewModel>();
-
-            services.AddTransient<MainViewModel>();
-            services.AddTransient<MainPage>();
-
-            services.AddTransient<MasterDetailViewModel>();
-            services.AddTransient<MasterDetailPage>();
-
-            services.AddTransient<SettingsViewModel>();
-            services.AddTransient<SettingsPage>();
-
-            // Configuration
-            services.Configure<AppConfig>(context.Configuration.GetSection(nameof(AppConfig)));
-        }
+            await _applicationHostService.StartAsync();
+        }        
 
         private async void OnExit(object sender, ExitEventArgs e)
         {
-            await _host.StopAsync();
-            _host.Dispose();
-            _host = null;
+            await _applicationHostService.StopAsync();
         }
 
         private void OnDispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)

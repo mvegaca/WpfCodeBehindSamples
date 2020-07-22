@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Windows;
-
-using CodeBehindApp.Contracts.Services;
 using CodeBehindApp.Models;
 
 using ControlzEx.Theming;
@@ -10,17 +8,17 @@ using Microsoft.Win32;
 
 namespace CodeBehindApp.Services
 {
-    public class ThemeSelectorService : IThemeSelectorService
+    public static class ThemeSelectorService
     {
-        private bool IsHighContrastActive
+        private static bool IsHighContrastActive
                         => SystemParameters.HighContrast;
 
-        public ThemeSelectorService()
+        static ThemeSelectorService()
         {
             SystemEvents.UserPreferenceChanging += OnUserPreferenceChanging;
         }
 
-        public bool SetTheme(AppTheme? theme = null)
+        public static bool SetTheme(AppTheme? theme = null)
         {
             if (IsHighContrastActive)
             {
@@ -53,14 +51,14 @@ namespace CodeBehindApp.Services
             return false;
         }
 
-        public AppTheme GetCurrentTheme()
+        public static AppTheme GetCurrentTheme()
         {
             var themeName = App.Current.Properties["Theme"]?.ToString();
             Enum.TryParse(themeName, out AppTheme theme);
             return theme;
         }
 
-        private void OnUserPreferenceChanging(object sender, UserPreferenceChangingEventArgs e)
+        private static void OnUserPreferenceChanging(object sender, UserPreferenceChangingEventArgs e)
         {
             if (e.Category == UserPreferenceCategory.Color ||
                 e.Category == UserPreferenceCategory.VisualStyle)
